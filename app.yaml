@@ -1,0 +1,36 @@
+application: resolveref
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /
+  script: pubref.py
+
+- url: /css
+  static_dir: static/css
+
+- url: /js
+  static_dir: static/js
+
+- url: /robots.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+
+- url: /ref/(.*)/(.*)
+  script: pubref.py
+
+- url: /ref/(.*)
+  script: pubref.py
+
+- url: /search
+  script: pubref.py
+
+- url: /suggestjournal
+  script: pubref.py
+
+- url: /verify/(.*)/(.*)
+  script: pubref.py
+
+- url: /verify/(.*)
+  script: pubref.py

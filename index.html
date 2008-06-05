@@ -1,0 +1,190 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/css/main.css" />
+
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/jquery.suggest.js"></script>
+    <script type="text/javascript" src="/js/jquery.strings.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui-core-tabs.js"></script>
+    <script type="text/javascript">//<![CDATA[
+
+    $(document).ready(function() {
+         $("#tab_box > .tab_bar > ul").tabs({ fx: { opacity: 'toggle' } });
+         $('#results').html('<br/>');
+         //$('#about').hide();
+    });
+
+    jQuery(function() {
+        jQuery("#journal").suggest("suggestjournal");
+    });
+
+    // grab values from the form, send to the server-side verify function
+    // results appear in the results box
+    function verify_form() {
+
+        if ($("#volume").attr("value") == undefined) {
+            var verify_url = $.format("/verify/{journal}/{year}/{page}", 
+                {journal: escape($("#journal").attr("value")),
+                year: escape($("#year").attr("value")),
+                page: escape($("#page").attr("value"))
+                }
+            );
+            }
+        else {
+            var verify_url = $.format("/verify/{journal}/{year}/{volume}/{page}", 
+                {journal: escape($("#journal").attr("value")),
+                year: escape($("#year").attr("value")),
+                volume: escape($("#volume").attr("value")),
+                page: escape($("#page").attr("value"))
+                }
+            );
+        }
+        
+        $("#results").load(verify_url);
+    }
+
+  //]]>
+  </script>
+
+  </head>
+
+  <body>
+
+    <div id="title"><h1>ResolveRef Resolver</h1></div>
+
+      <blockquote>{{ content }}</blockquote>
+    <div id="searchbox" class="box">
+
+    <form action="/search" id="searchform" method="post">
+      
+        <table>
+        
+        <tr>
+        <td><label>Journal:</label></td>
+        <td><input type="text" name="journal" id="journal" size="30"></textarea></td>
+        </tr>
+        
+        <tr>
+        <td><label>Year:</label></td>
+        <td><input type="text" name="year" id="year" size="30"></textarea></td>
+        </tr>
+        
+        <tr>
+        <td><label>Volume:</label></td>
+        <td><input type="text" name="volume" id="volume" size="30"></textarea></td>
+        </tr>
+        
+        <tr>
+        <td><label>Page:</label></td>
+        <td><input type="text" name="page" id="page" size="30"></textarea></td>
+        </tr>
+        <tr>
+           <input type="hidden" id="action" value="resolve">
+           <td><br/><input type="button" id="verify" name="verify" value="Verify" onclick='verify_form();'></td>
+            <td><br/><input type="submit" value="Resolve and redirect"></td>
+        </tr>
+        </table>
+    </form>
+
+    </div>
+
+    <div id="results" class="box">
+    </div>
+
+<div id="tab_box" class="flora">
+        <div class="tab_bar"
+        <ul>
+                <li><a href="#comments"><span>Comments</span></a></li>
+                <li><a href="#about"><span>About</span></a></li>
+        </ul>
+        </div>
+
+<!-- disqus start -->
+<div id="comments" class="box">
+
+<script type="text/javascript">
+	var disqus_url = 'http://resolveref.appspot.com';
+	var disqus_title = 'ResolveRef comments';
+	var disqus_message = 'ResolveRef comments';
+</script>
+
+<div id="disqus_thread"></div><script type="text/javascript" src="http://disqus.com/forums/resolveref/embed.js"></script>
+<div class="box">
+<noscript><a href="http://resolveref.disqus.com/?url=ref">View the forum thread.</a></noscript>
+<!-- <p><a href="http://resolveref.appspot.com#disqus_thread">Comments (View)</a></p> -->
+</div>
+
+<script type="text/javascript">
+//<[CDATA[
+(function() {
+		var links = document.getElementsByTagName('a');
+		var query = '?';
+		for(var i = 0; i < links.length; i++) {
+			if(links[i].href.indexOf('#disqus_thread') >= 0) {
+				query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+			}
+		}
+		document.write('<script type="text/javascript" src="http://disqus.com/forums/resolveref/get_num_replies.js' + query + '"></' + 'script>');
+	})();
+//]]>
+</script>
+</div>
+<!-- disqus end -->
+
+
+<!--
+    <div class="box">
+    <a href="#" id="about_toggle" onclick='$("#about").slideDown("slow");'>
+    <h3>About ResolveRef</h3></a>
+    </div>
+-->
+<div id="about" class="box">
+    <p>
+    <h3>Introduction</h3>
+    <p>ResolveRef is way of creating human-readable URLs pointing to journal articles in the scientific literature. In web-geek terms, it's essentially a <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">RESTful</a> way of doing a <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed</a> search which returns a single hit, and redirects to the full text article via the <a href="http://en.wikipedia.org/wiki/Digital_object_identifier">DOI</a> URL. If that's just gibberish to you, take a look at the example below. ResolveRef URLs are constructed like:</p>
+    
+        <em>http://resolveref.appspot.com/ref/<b>journal</b>/<b>year</b>/<b>volume</b>/<b>page</b></em><br/>
+
+    <p>or in the case where there is no volume identifier, </p>
+
+        <em>http://resolveref.appspot.com/ref/<b>journal</b>/<b>year</b>/<b>page</b></em><br/>
+        
+    <p>For example to retrieve the journal article:</p>
+    
+    <p><u>EL Willighagen</u>, NM O'Boyle, H Gopalakrishnan, D Jiao, R Guha, C Steinbeck and D J Wild, <em>Userscripts for the Life Sciences</em> BMC Bioinformatics, 2007, 8, 487.</p>
+    
+    <p>you can use the ResolveRef URL:</p>
+    
+    <em><a href="http://resolveref.appspot.com/ref/BMC Bioinformatics/2007/8/487">http://resolveref.appspot.com/ref/BMC Bioinformatics/2007/8/487</a></em><br/>
+    
+    <p>Which in effect executes a PubMed search, and if there is a single result (which in this case there is), ResolveRef retrieves the DOI and redirects your browser to that document (which is usually the electronic version of the article at the publishers site).</p>
+
+    <h3>Details</h3>
+
+    <p>The main purpose of ResolveRef isn't really to be used via the form above, but the form can help you construct ResolveRef URLs when the journal name used by PubMed isn't obvious. Once you are familiar with the "PubMed titles" of your favorite journals, you can construct ResolveRef URLs directly into your browsers URL bar.</p>
+    
+    <p>By adding the optional query strings <em>?redirect=doi</em>, <em>?redirect=pubmed</em> or <em>?redirect=hubmed</em>, the URL will resolve to the DOI, the PubMed abstract or the <a href="http://www.hubmed.org/">HubMed</a> abstract respectively.</p>
+    
+    <p>For example:</p>
+    
+        <em><a href="http://resolveref.appspot.com/ref/BMC Bioinformatics/2007/8/487?redirect=hubmed">http://resolveref.appspot.com/ref/BMC Bioinformatics/2007/8/487<b>?redirect=hubmed</b></a></em><br/>
+        
+    <p>will redirect your browser to the HubMed abstract for the above article, rather than the default redirection to the DOI. If for some reason PubMed doesn't have a DOI for your article, ResolveRef forwards to the HubMed abstract page.</p>
+    
+    <h3>History</h3>
+
+    <p>ResolveRef is based on an idea originally presented by Noel O'Boyle, who proposed a standard identifier for journal articles called <a href="http://baoilleach.blogspot.com/2008/01/doi-or-doh-proposal-for-restful-unique.html">OpenRef</a>. The idea is that every journal article can be uniquely identified using a URL scheme, essentially of the form described above.<p/>
+
+    <p>The nice thing about these OpenRef URLs is that they should be unique and guessible, unlike other identifiers in use such as the DOI, or the PubMed ID (PMID).</p>
+
+    <p>I initially wrote <a href="http://blog.pansapiens.com/2008/01/18/an-openref-implementation/">an "OpenRef resolver" using Turbogears</a> that took these sorts of URLs, searched the PubMed database and forwarded the requester to the apporiate article via the DOI. After a bit of discussion with Noel and others, I became clear that the "perfect ideal" of unique OpenRef identifiers probably couldn't be implemented this way, in part due to the warts of the PubMed database, and the fact that PubMed focuses on the life sciences and doesn't index everything. It seems like a real OpenRef resolver would require a new database .. but since that OpenRef database doesn't actually exist yet, ResolveRef is probably the closest thing to a working OpenRef resolver.</p>
+
+    <!-- <a href="{{ loginout_url }}">{{ loginout_linktext }}</a> -->
+   </div>
+  <div class="footer">
+    	<a href="http://appgallery.appspot.com/"><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" alt="Powered by Google App Engine" /></a>
+  </div>
+  </div> <!-- close tabs -->
+  </body>
+</html>
+
