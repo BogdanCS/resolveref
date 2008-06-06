@@ -244,7 +244,8 @@ class SuggestJournal(webapp.RequestHandler):
         for t in title_list:
             if qregex.match(t.lower()):
                 # truncate title to 40 chars for suggestion
-                suggestions.append(t[:40])
+                #suggestions.append(t[:40])
+                suggestions.append(t)
                 if len(suggestions) > 19:
                     break
          
