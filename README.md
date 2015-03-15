@@ -16,4 +16,7 @@ The general form of _ResolveRef_ URLs is:
 
 or in the case where there is no volume identifier,
 
-    http://resolveref.appspot.com/ref/_journal_/_year_/_page_Automatically exported from code.google.com/p/resolveref
+    http://resolveref.appspot.com/ref/_journal_/_year_/_page_
+    
+----
+_Resolveref_ was inspried by [the proposal by Noel O'Boyle](http://baoilleach.blogspot.com/2008/01/doi-or-doh-proposal-for-restful-unique.html) for a new unique identifier for journal articles. I wrote a short blog post about the [development here](http://blog.pansapiens.com/2008/04/23/announcing-resolveref-on-google-app-engine/).
