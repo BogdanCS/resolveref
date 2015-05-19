@@ -8,7 +8,7 @@ import wsgiref.handlers
 from google.appengine.ext.webapp import template
 
 from google.appengine.api import users
-from google.appengine.ext import webapp
+import webapp2 as webapp
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
 
@@ -251,17 +251,12 @@ class SuggestJournal(webapp.RequestHandler):
          
         self.response.out.write("\n".join(suggestions))
 
-def main():
-    application = webapp.WSGIApplication(
-                                       [('/', Main),
-                                        ('/ref/(.*)/(.*)', PubRef),
-                                        ('/ref/(.*)', PubRef),
-                                        ('/search', ResolveForm),
-                                        ('/suggestjournal', SuggestJournal),
-                                        ('/verify/(.*)', Verify),
-                                        ('/verify/(.*)/(.*)', Verify)],
+application = webapp.WSGIApplication(
+                                     [('/', Main),
+                                      ('/ref/(.*)/(.*)', PubRef),
+                                      ('/ref/(.*)', PubRef),
+                                      ('/search', ResolveForm),
+                                      ('/suggestjournal', SuggestJournal),
+                                      ('/verify/(.*)', Verify),
+                                      ('/verify/(.*)/(.*)', Verify)],
                                        debug=True)
-    wsgiref.handlers.CGIHandler().run(application)
-
-if __name__ == "__main__":
-    main()

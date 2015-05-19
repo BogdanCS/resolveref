@@ -1,11 +1,16 @@
-application: resolveref
+application: resolveref-hrd
 version: 1
-runtime: python
+runtime: python27
+threadsafe: true
 api_version: 1
+
+libraries:
+- name: django
+  version: "latest"
 
 handlers:
 - url: /
-  script: pubref.py
+  script: pubref.application
 
 - url: /css
   static_dir: static/css
@@ -18,19 +23,19 @@ handlers:
   upload: static/robots.txt
 
 - url: /ref/(.*)/(.*)
-  script: pubref.py
+  script: pubref.application
 
 - url: /ref/(.*)
-  script: pubref.py
+  script: pubref.application
 
 - url: /search
-  script: pubref.py
+  script: pubref.application
 
 - url: /suggestjournal
-  script: pubref.py
+  script: pubref.application
 
 - url: /verify/(.*)/(.*)
-  script: pubref.py
+  script: pubref.application
 
 - url: /verify/(.*)
-  script: pubref.py
+  script: pubref.application
