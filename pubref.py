@@ -8,7 +8,7 @@ import wsgiref.handlers
 from google.appengine.ext.webapp import template
 
 from google.appengine.api import users
-import webapp2 as webapp
+import webapp2
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
 
@@ -53,7 +53,7 @@ class UrlFetch:
         pass
 
 
-class PubRef(webapp.RequestHandler):
+class PubRef(webapp2.RequestHandler):
     
     def resolve(self, *req_path):
         """
@@ -170,9 +170,9 @@ class PubRef(webapp.RequestHandler):
             self.response.out.write('PubMed was temporarily unavailable when fetching "%s". Try again later\n' % (pubref_path) )
             self.response.set_status(status)
         else:
-            self.redirect(url)
+            self.redirect(str(url))
 
-class Main(webapp.RequestHandler):
+class Main(webapp2.RequestHandler):
     def get(self):
         if users.get_current_user():
             loginout_url = users.create_logout_url(self.request.uri)
@@ -191,7 +191,7 @@ class Main(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
 
-class ResolveForm(webapp.RequestHandler):
+class ResolveForm(webapp2.RequestHandler):
     def post(self):
 
         if users.get_current_user():
@@ -223,7 +223,7 @@ class JournalTitle(db.Model):
     first_two_letters = db.StringProperty(required=True)
 
 
-class SuggestJournal(webapp.RequestHandler):
+class SuggestJournal(webapp2.RequestHandler):
     def get(self, q=""):
         # the query string
         q = self.request.get('q')
@@ -251,7 +251,7 @@ class SuggestJournal(webapp.RequestHandler):
          
         self.response.out.write("\n".join(suggestions))
 
-application = webapp.WSGIApplication(
+application = webapp2.WSGIApplication(
                                      [('/', Main),
                                       ('/ref/(.*)/(.*)', PubRef),
                                       ('/ref/(.*)', PubRef),
